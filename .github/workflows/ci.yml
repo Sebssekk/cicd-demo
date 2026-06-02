@@ -29,16 +29,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js Environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '24'
 
       # Concept: Explicit Tool-Agnostic Caching
       - name: 💾 Cache Node Modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.npm
           # The key forces a clean download ONLY if package-lock.json changes
@@ -62,7 +62,7 @@ jobs:
       # Concept: Sharing files between isolated Jobs
       # We upload the compiled 'dist' folder so later deployment jobs can grab it.
       - name: 📤 Upload Compiled Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: compiled-application
           path: dist/
@@ -79,7 +79,7 @@ jobs:
     
     steps:
       - name: 📥 Download Compiled Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: compiled-application
           path: dist/
@@ -92,7 +92,7 @@ jobs:
           echo "Current working directory structure:"
           ls -R dist/
           echo "========================================"
-          
+
       - name: 🚀 Deploying to Staging Environment
         run: |
           echo "Code on main branch has been fully validated by Job 1."
@@ -109,24 +109,24 @@ jobs:
     
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Because this is a totally different VM, we must pull the 'dist'
       # folder that Job 1 built, rather than compiling it again.
       - name: 📥 Download Compiled Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: compiled-application
           path: dist/
 
       - name: 🐳 Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: 📦 Build and Push Docker Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true
