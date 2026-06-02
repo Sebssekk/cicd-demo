@@ -1,0 +1,60 @@
+name: CI/CD Trigger Demonstration
+
+# ---------------------------------------------------------
+# Define exactly WHEN this pipeline should run
+# ---------------------------------------------------------
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'    # NEW: Trigger on any branch starting with "feature/"
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+    tags:
+      - 'v*.*.*'
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+# ---------------------------------------------------------
+# Define WHAT the pipeline should do
+# ---------------------------------------------------------
+jobs:
+  evaluate-trigger:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Print Trigger Context (Always Runs)
+        run: |
+          echo "Event: ${{ github.event_name }} | Ref: ${{ github.ref }}"
+
+      # ---------------------------------------------------------
+      # Declarative Conditionals (Replacing Bash Logic)
+      # ---------------------------------------------------------
+      
+      - name: "🛠️ Action: Run Fast Unit Tests"
+        # Runs ONLY on pushes to feature branches
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/feature/')
+        run: echo "Developer pushed to a feature branch. Running fast local tests..."
+
+      - name: "🧪 Action: Run Extensive PR Tests"
+        # Runs ONLY on Pull Requests
+        if: github.event_name == 'pull_request'
+        run: echo "Pull request opened/updated! Running heavy integration tests..."
+
+      - name: "🚀 Action: Deploy to Staging"
+        # Runs ONLY on pushes/merges directly to the main branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "Code merged to main! Deploying to Staging environment..."
+
+      - name: "👑 Action: Deploy to Production"
+        # Runs ONLY when a release tag is pushed (e.g., v1.0.0)
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        run: echo "Release tag detected! Preparing Production Deployment..."

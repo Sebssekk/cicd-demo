@@ -1,0 +1,32 @@
+{
+  "name": "cicd-demo",
+  "version": "1.0.0",
+  "description": "A dynamic Express API for CI/CD demonstration",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsgo",
+    "start": "node dist/server.js",
+    "lint": "eslint src/**/*.ts",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "seb",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^7.2.0",
+    "@typescript/native-preview": "^7.0.0-dev.20260601.1",
+    "eslint": "^10.4.1",
+    "globals": "^17.6.0",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.1"
+  }
+}
