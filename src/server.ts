@@ -11,7 +11,8 @@ interface Course {
 
 const courses: Course[] = [
   { id: 1, title: 'Foundations of Automated Delivery' },
-  { id: 2, title: 'Version Control & Git' }
+  { id: 2, title: 'Version Control & Git' },
+  { id: 3, title: 'CICD' }
 ];
 
 // GET endpoint: Fetch all courses
